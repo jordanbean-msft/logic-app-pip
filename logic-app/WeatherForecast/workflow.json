@@ -1,0 +1,40 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "HTTP_-_Call_3rd_party_API": {
+                "inputs": {
+                    "method": "GET",
+                    "uri": "https://wa-logicAppPip-ussc-demo.azurewebsites.net/WeatherForecast"
+                },
+                "runAfter": {},
+                "type": "Http"
+            },
+            "Response_-_Return_3rd_party_API_response": {
+                "inputs": {
+                    "body": "@body('HTTP_-_Call_3rd_party_API')",
+                    "statusCode": "@outputs('HTTP_-_Call_3rd_party_API')['statusCode']"
+                },
+                "kind": "http",
+                "runAfter": {
+                    "HTTP_-_Call_3rd_party_API": [
+                        "Succeeded",
+                        "FAILED",
+                        "TIMEDOUT"
+                    ]
+                },
+                "type": "Response"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "manual": {
+                "inputs": {},
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "kind": "Stateful"
+}
