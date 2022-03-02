@@ -1,8 +1,20 @@
 # logic-app-pip
 
-This demo uses an Azure [Logic App Standard](https://docs.microsoft.com/en-us/azure/logic-apps/single-tenant-overview-compare) that calls an external API that has [IP whitelisting restrictions](https://docs.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions) around it. It shows how to associate your Logic App with a [Virtual Network](https://docs.microsoft.com/en-us/azure/logic-apps/secure-single-tenant-workflow-virtual-network-private-endpoint) so you can control the Internet egress and predict what the outbound IP will be. The external API wants to whitelist the IP ranges that are allowed to call it to improve security beyond what an API key can provide. This example uses a [NAT Gateway]() associated with the vNet to ensure all outbound traffic egresses through the static Public IP address and not from the multi-tenant service that hosts Logic Apps (which has a large CIDR range rather than a single IP address to whitelist on the 3rd party API).
+This demo uses an Azure [Logic App Standard](https://docs.microsoft.com/en-us/azure/logic-apps/single-tenant-overview-compare) that calls an external API that has [IP whitelisting restrictions](https://docs.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions) around it. It shows how to associate your Logic App with a [Virtual Network](https://docs.microsoft.com/en-us/azure/logic-apps/secure-single-tenant-workflow-virtual-network-private-endpoint) so you can control the Internet egress and predict what the outbound IP will be. The external API wants to whitelist the IP ranges that are allowed to call it to improve security beyond what an API key can provide. This example uses a [NAT Gateway](https://docs.microsoft.com/en-us/azure/virtual-network/nat-gateway/nat-overview) associated with the vNet to ensure all outbound traffic egresses through the static Public IP address and not from the multi-tenant service that hosts Logic Apps (which has a large CIDR range rather than a single IP address to whitelist on the 3rd party API).
 
 ![architecture](.img/architecture.png)
+
+The most important part of this design is associating the `Logic App` with the `Virtual Network`. In the past, you had to deploy an [Logic App ISE](https://docs.microsoft.com/en-us/azure/logic-apps/connect-virtual-network-vnet-isolated-environment) to get the vNet integration, but you can now do this with [Logic App Standard](https://docs.microsoft.com/en-us/azure/logic-apps/secure-single-tenant-workflow-virtual-network-private-endpoint#set-up-outbound-traffic-using-vnet-integration).
+
+You can see this association in the Azure portal.
+
+Navigate to the `Networking` blade. You can see that `VNet integration` is enabled for outbound traffic.
+
+![networkingBlade](.img/networkingBlade.png)
+
+On the `VNet Integration` page, you can see that all traffic is routed through the vNet and the vNet association details (like which virtual network and which subnet).
+
+![vNetIntegration](.img/vNetIntegration.png)
 
 ## Disclaimer
 
